@@ -105,7 +105,7 @@ const Profile = () => {
         setShowAlert({ isError: false, message: res.data.message })
       })
       .catch(err => {
-        setShowAlert({ isError: true, message: err.response.data })
+        setShowAlert({ isError: true, message: 'Wrong old password' })
       })
       .finally(() => {
         handleClose()

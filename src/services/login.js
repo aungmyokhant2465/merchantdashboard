@@ -23,7 +23,7 @@ const changePassword = async (credentials) => {
     const config = {
         headers: { authorization: `Bearer ${token}`, 'Access-Control-Allow-Origin': '*' }
     }
-    const response = await axios.post(`${BACKEND_URL}/merchant/merchantPasswordChange`, credentials, config)
+    const response = await axios.post(`${BACKEND_URL}/loyalty/merchantPasswordChange`, credentials, config)
     return response
 }
 
