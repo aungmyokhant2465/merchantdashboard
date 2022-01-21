@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { user } from '../../services/login'
+import { user } from '../../services/login';
+import qr from 'qrcode'
 
 import { Breadcrumbs, Box } from '@mui/material';
 import Paper from '@mui/material/Paper';
@@ -17,12 +18,42 @@ import { QRCODES } from '../../query';
 
 const QRCodes = () => {
 
-    let QRCodes = null
+    // let QRCodes = null
+    const [ QRCodes, setQRCodes ] = useState(null)
     const result = useQuery(QRCODES, { variables: { id: user.id } })
 
-    if(result.data) {
-      QRCodes = result.data.merchant_loyalty_qr_codes
-    }
+    // if(result.data) {
+    //   QRCodes = result.data.merchant_loyalty_qr_codes
+    //   QRCodes = new Array(...QRCodes)
+    //   QRCodes = QRCodes.map(row => {
+    //     row = { ...row }
+    //     const qrcode = await qr.toDataURL(row.id)
+    //       // .then(res => {
+    //       //   console.log(res)
+    //       //   row.qrcode = res
+    //       // })
+    //     console.log(" qrcode: ",qrcode)
+    //     return row
+    //   } )
+    //   console.log(QRCodes)
+    // }
+    // console.log('end')
+
+    useEffect(async() => {
+      if(result.data) {
+        // setQRCodes(result.data.merchant_loyalty_qr_codes)
+        let rows = new Array(...result.data.merchant_loyalty_qr_codes)
+        const ro = await rows.map( row => {
+          row = { ...row }
+          qr.toDataURL(row.id)
+            .then(res => {
+              row.qrcode = res
+            })
+          return row
+        })
+        setQRCodes(ro)
+      }
+    }, [result.data])
 
     if(!QRCodes) {
       return (
@@ -84,7 +115,9 @@ const QRCodes = () => {
                           QRCodes.map((row, index) => (
                             <TableRow hover role="checkbox" tabIndex={-1} key={index}>
                               <TableCell>
-                                { row.id }
+                                <a href={row.qrcode} download={`${index}_${Date.now()}_qrcode.png`}>
+                                  <img src={row.qrcode} alt="qrcode" />
+                                </a>
                               </TableCell>
                               <TableCell>
                                 { row.request_point_amount }
