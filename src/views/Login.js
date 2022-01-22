@@ -94,7 +94,7 @@ const Login = () => {
                 }} >
                     <Box  sx={{ m: 5 }}>
                         <Typography variant='h4' paragraph>
-                           AIC Pass Admin Panel
+                           AIC Pass Merchant Panel
                         </Typography>
                         <Typography variant="subtitle2" component="p" >
                             Enter your credentials to continue
